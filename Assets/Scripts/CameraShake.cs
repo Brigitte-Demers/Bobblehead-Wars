@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraShake : MonoBehaviour {
+public class CameraShake : MonoBehaviour
+{
 
   public float shakeDecay = 0.002f;
   public float intensity = .3f;
@@ -10,7 +11,8 @@ public class CameraShake : MonoBehaviour {
   private Quaternion originRotation;
   private float shakeIntensity = 0;
 
-  void Update() {
+  void Update()
+    {
     if (shakeIntensity > 0) {
       transform.position = originPosition + Random.insideUnitSphere * shakeIntensity;
       transform.rotation = new Quaternion(
@@ -22,7 +24,8 @@ public class CameraShake : MonoBehaviour {
     }
   }
 
-  public void Shake() {
+  public void Shake() 
+    {
     originPosition = transform.position;
     originRotation = transform.rotation;
     shakeIntensity = intensity;

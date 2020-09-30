@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public Rigidbody head;
     // Indicates what layer the mask should hit.
     public LayerMask layerMask;
+    // Instance variable to store the CharacterController.
     private CharacterController characterController;
     // Where the Marine should be staring.
     private Vector3 currentLookTarget = Vector3.zero;
@@ -18,12 +19,14 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Gets reference to current component passed into the script.
         characterController = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Prevents the character from goin through obstacles. 
         Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"),
             0, Input.GetAxis("Vertical"));
         characterController.SimpleMove(moveDirection * moveSpeed);
@@ -57,6 +60,7 @@ public class PlayerController : MonoBehaviour
             // any of the triggers.
             QueryTriggerInteraction.Ignore))
         {
+            // Activates if it is NOT equal to the currentLookTarget.
             if (hit.point !=currentLookTarget)
             {
                 // Coordinates the raycast hits/where the Marine should be looking.
