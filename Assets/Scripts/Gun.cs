@@ -6,6 +6,7 @@ public class Gun : MonoBehaviour
 {
     // Creates public variable, visible within the Unity editor.
     public GameObject bulletPrefab;
+
     // Creates public variable for the launch point.
     public Transform launchPosition;
 
@@ -40,8 +41,10 @@ public class Gun : MonoBehaviour
     {
         // 1: Creates game object instance for the bullet prefab.
         GameObject bullet = Instantiate(bulletPrefab) as GameObject;
+
         // 2: Sets bullets position to the launcher's position.
         bullet.transform.position = launchPosition.position;
+
         // 3: Specifies the direction and velocity for the bullet prefab.
         bullet.GetComponent<Rigidbody>().velocity =
             transform.parent.forward * 100;

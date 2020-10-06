@@ -6,6 +6,7 @@ public class CameraMovement : MonoBehaviour
 {
     // What I want the camera to follow.
     public GameObject followTarget;
+
     // The speed I want the camera to be following at.
     public float moveSpeed;
 

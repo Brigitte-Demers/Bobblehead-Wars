@@ -8,11 +8,15 @@ public class PlayerController : MonoBehaviour
 {
     // Base movement speed
     public float moveSpeed = 50.0f;
+
     public Rigidbody head;
+
     // Indicates what layer the mask should hit.
     public LayerMask layerMask;
+
     // Instance variable to store the CharacterController.
     private CharacterController characterController;
+
     // Where the Marine should be staring.
     private Vector3 currentLookTarget = Vector3.zero;
 
@@ -49,13 +53,17 @@ public class PlayerController : MonoBehaviour
 
         // Creates empty RaycastHit.
         RaycastHit hit;
+
         // Populates the RaycastHit with an object if hit.
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
         // Draws the ray so it is visible within the scene.
         UnityEngine.Debug.DrawRay(ray.origin, ray.direction * 1000, Color.green);
+
         // Physics.Raycast casts the ray. 1000 indicates the length of the ray.
         // layerMask lets the cast know what you're attempting to hit.
         if (Physics.Raycast(ray, out hit, 1000, layerMask,
+
             // QueryTriggerInteraction.Ignore tells the physics engine to not activate
             // any of the triggers.
             QueryTriggerInteraction.Ignore))
@@ -65,12 +73,15 @@ public class PlayerController : MonoBehaviour
             {
                 // Coordinates the raycast hits/where the Marine should be looking.
                 currentLookTarget = hit.point;
+
                 // 1: Gets target position.
                 Vector3 targetPosition = new Vector3(hit.point.x,
                     transform.position.y, hit.point.z);
+
                 // 2: Calculates the Quaternions which will determine the rotation.
                 Quaternion rotation = Quaternion.LookRotation(targetPosition -
                     transform.position);
+
                 // 3: Does the actual turning by using Lerp.
                 transform.rotation = Quaternion.Lerp(transform.rotation,
                     rotation, Time.deltaTime * 10.0f);
