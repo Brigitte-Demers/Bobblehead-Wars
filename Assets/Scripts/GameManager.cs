@@ -16,6 +16,13 @@ public class GameManager : MonoBehaviour
     // Represents the alien prefab.
     public GameObject alien;
 
+    // Referes to the GameObject the player must collide with to get the
+    // update.
+    public GameObject upgradePrefab;
+
+    // Reference to the Gun script.
+    public Gun gun;
+
     // Determines how many aliens can be on screen at one time.
     public int maxAliensOnScreen;
 
@@ -32,8 +39,15 @@ public class GameManager : MonoBehaviour
     // Same as above.
     public float maxSpawnTime;
 
+    // The maximum time that will pass before the upgrade spawns.
+    public float upgradeMaxTimeSpawn = 7.5f;
+
     // Will track total number of aliens on screen.
     private int aliensOnScreen = 0;
+
+    // Tracks whether or not the upgrade has spawned since it can only
+    // spawn once.
+    private bool spawnedUpgrade = false;
 
     // Will track time between spawn events.
     private float generatedSpawnTime = 0;
@@ -41,15 +55,50 @@ public class GameManager : MonoBehaviour
     // Track the milliseconds since the last spawn.
     private float currentSpawnTime = 0;
 
+    // Track the current time until the upgrade spawns.
+    private float actualUpgradeTime = 0;
+
+    // Same as above.
+    private float currentUpgradeTime = 0;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        // Upgrade time is a random number generated from UnityEngine.Random.Range().
+        actualUpgradeTime = UnityEngine.Random.Range(upgradeMaxTimeSpawn - 3.0f,
+            upgradeMaxTimeSpawn);
+        actualUpgradeTime = Mathf.Abs(actualUpgradeTime);
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Adds the amount of time from the past frame.
+        currentUpgradeTime += Time.deltaTime;
+
+        if (currentUpgradeTime > actualUpgradeTime)
+        {
+            // 1: After the random time period passes, this checks if the upgrade 
+            // has already spawned or not.
+            if (!spawnedUpgrade)
+            {
+                // 2: The upgrade will appear in one of the aliens spawn points.
+                int randomNumber = UnityEngine.Random.Range(0, spawnPoints.Length - 1);
+                GameObject spawnLocation = spawnPoints[randomNumber];
+
+                // 3: Spawns the upgrade and associates the gun with the upgrade.
+                GameObject upgrade = Instantiate(upgradePrefab) as GameObject;
+                Upgrade upgradeScript = upgrade.GetComponent<Upgrade>();
+                upgradeScript.gun = gun;
+                upgrade.transform.position = spawnLocation.transform.position;
+
+                // 4: This infrms the code that the upgrade has been spawned.
+                spawnedUpgrade = true;
+
+                SoundManager.Instance.PlayOneShot(SoundManager.Instance.powerUpAppear);
+            }
+        }
+
         // Accumulates the amount of time that's passed between each
         // frame update.
         currentSpawnTime += Time.deltaTime;

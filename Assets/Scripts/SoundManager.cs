@@ -16,7 +16,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip marineDeath;
     public AudioClip Victory;
     public AudioClip elevatorArrived;
-    public AudioClip powerUpPickUp;
+    public AudioClip powerUpPickup;
     public AudioClip powerUpAppear;
 
     // Refers to the audio source added to the SoundManager.

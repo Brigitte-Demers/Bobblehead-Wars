@@ -759,6 +759,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7419726490767418242, guid: 4d9d65636b33ecc459690de717064400,
     type: 3}
   launchPosition: {fileID: 1344882379}
+  isUpgraded: 0
+  upgradeTime: 10
 --- !u!54 &581814048
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1400,7 +1402,7 @@ MonoBehaviour:
   marineDeath: {fileID: 8300000, guid: d9f613ad6fc2e5648b734dade33baf01, type: 3}
   Victory: {fileID: 8300000, guid: b4d3cb20c25bae54e999c556d56876b8, type: 3}
   elevatorArrived: {fileID: 8300000, guid: 2f387366f0fba044487680bf853f5f68, type: 3}
-  powerUpPickUp: {fileID: 8300000, guid: 55bc10006917fbe46a89f70a93cd4e1f, type: 3}
+  powerUpPickup: {fileID: 0}
   powerUpAppear: {fileID: 8300000, guid: 00f25f135ee488c4591479876ca3f10c, type: 3}
 --- !u!82 &1045285934
 AudioSource:
@@ -1721,11 +1723,14 @@ MonoBehaviour:
   - {fileID: 289172981}
   - {fileID: 606496499}
   alien: {fileID: 1018349671205155350, guid: 80171cc35919d9549b4bcf3ddd82d412, type: 3}
+  upgradePrefab: {fileID: 105092, guid: 941d6224549424c91b1cf112b44ec0cb, type: 3}
+  gun: {fileID: 581814047}
   maxAliensOnScreen: 50
   totalAliens: 50
   aliensPerSpawn: 3
   minSpawnTime: 0
   maxSpawnTime: 3
+  upgradeMaxTimeSpawn: 7.5
 --- !u!4 &1182725616
 Transform:
   m_ObjectHideFlags: 0
