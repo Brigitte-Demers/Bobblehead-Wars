@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     // Indicates what layer the mask should hit.
     public LayerMask layerMask;
 
+    public Animator bodyAnimator;
+
     // Instance variable to store the CharacterController.
     private CharacterController characterController;
 
@@ -43,12 +45,14 @@ public class PlayerController : MonoBehaviour
             0, Input.GetAxis("Vertical"));
         if (moveDirection == Vector3.zero)
         {
-            // T0D0
+            bodyAnimator.SetBool("IsMoving", false);
         }
         else
         {
             // Adds the force behind the motion of the Marine's head.
             head.AddForce(transform.right * 150, ForceMode.Acceleration);
+
+            bodyAnimator.SetBool("IsMoving", true);
         }
 
         // Creates empty RaycastHit.
