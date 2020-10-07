@@ -52,4 +52,10 @@ public class SoundManager : MonoBehaviour
     {
         
     }
+
+    public void PlayOneShot(AudioClip clip)
+    {
+        // Wrapper call to PlayOneShot().
+        soundEffectAudio.PlayOneShot(clip);
+    }
 }

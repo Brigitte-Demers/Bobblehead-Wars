@@ -38,5 +38,9 @@ public class Alien : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
+
+        // Cals the sound effect for the aliens death upon the Alien game objects
+        // destruction.
+        SoundManager.Instance.PlayOneShot(SoundManager.Instance.alienDeath);
     }
 }

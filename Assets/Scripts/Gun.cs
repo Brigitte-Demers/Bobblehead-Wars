@@ -10,10 +10,14 @@ public class Gun : MonoBehaviour
     // Creates public variable for the launch point.
     public Transform launchPosition;
 
+    // Creates an audio instance.
+    private AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        // Gets a reference to the attached AudioSource.
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -48,5 +52,8 @@ public class Gun : MonoBehaviour
         // 3: Specifies the direction and velocity for the bullet prefab.
         bullet.GetComponent<Rigidbody>().velocity =
             transform.parent.forward * 100;
+
+        // Plays the shooting sound.
+        audioSource.PlayOneShot(SoundManager.Instance.gunFire);
     }
 }
