@@ -6,6 +6,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    // The marine's body.
+    public Rigidbody marineBody;
+
+    // Provides an array of force values for the camera.
+    public float[] hitForce;
+
+    // Grace period after the hero sustains damage. 
+    public float timeBetweenHits = 2.5f;
+
     // Base movement speed
     public float moveSpeed = 50.0f;
 
@@ -22,6 +31,18 @@ public class PlayerController : MonoBehaviour
     // Where the Marine should be staring.
     private Vector3 currentLookTarget = Vector3.zero;
 
+    // A flag that indicates the hero took a hit.
+    private bool isHit = false;
+
+    // Tracks amount of time in the grace period.
+    private float timeSinceHit = 0;
+
+    // Number of times the hero took a hit.
+    private int hitNumber = -1;
+
+    // Keeps track of the players current death state.
+    private bool isDead = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +57,16 @@ public class PlayerController : MonoBehaviour
         Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"),
             0, Input.GetAxis("Vertical"));
         characterController.SimpleMove(moveDirection * moveSpeed);
+
+        if (isHit)
+        {
+            timeSinceHit += Time.deltaTime;
+            if (timeSinceHit > timeBetweenHits)
+            {
+                isHit = false;
+                timeSinceHit = 0;
+            }
+        }
     }
 
     void FixedUpdate()
@@ -92,5 +123,52 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Alien alien = other.gameObject.GetComponent<Alien>();
+        if (alien != null)
+        {
+            // Check if colliding object has an Alien script attatched. If it is an Alien and it hits 
+            // the player, the player is considered hit.
+            if (!isHit)
+            {
+                // Increases hit number by 1, then gets a reference to CameraShake().
+                hitNumber += 1;
+                CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
+                // If the current hitNumber is les then the number of force values for the camera shake, then the 
+                // hero is still alive.
+                if (hitNumber < hitForce.Length)
+                {
+                    cameraShake.intensity = hitForce[hitNumber];
+                    cameraShake.Shake();
+                }
+                else
+                {
+                    Die();
+                }
+                // This sets hit to true, plays the grunt sound and kills the Alien.
+                isHit = true;
+                SoundManager.Instance.PlayOneShot(SoundManager.Instance.hurt);
+            }
+            alien.Die();
+        }
+    }
+
+    public void Die()
+    {
+        bodyAnimator.SetBool("IsMoving", false);
+        marineBody.transform.parent = null;
+        marineBody.isKinematic = false;
+        marineBody.useGravity = true;
+        marineBody.gameObject.GetComponent<CapsuleCollider>().enabled = true;
+        marineBody.gameObject.GetComponent<Gun>().enabled = false;
+
+        Destroy(head.gameObject.GetComponent<HingeJoint>());
+        head.transform.parent = null;
+        head.useGravity = true;
+        SoundManager.Instance.PlayOneShot(SoundManager.Instance.marineDeath);
+        Destroy(gameObject);
     }
 }

@@ -1,11 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+/*
+ Allows access to UnityEvent in code.
+ */
+using UnityEngine.Events;
 
 using UnityEngine.AI;
 
 public class Alien : MonoBehaviour
 {
+    // Custom event type that can be configured in the inspector. Will occur on each
+    // call to an alien.
+    public UnityEvent OnDestroy;
+
     // Target is where the alien should go.
     public Transform target;
 
@@ -37,10 +45,17 @@ public class Alien : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
+        Die();
 
         // Cals the sound effect for the aliens death upon the Alien game objects
         // destruction.
         SoundManager.Instance.PlayOneShot(SoundManager.Instance.alienDeath);
+    }
+
+    public void Die()
+    {
+        OnDestroy.Invoke();
+        OnDestroy.RemoveAllListeners();
+        Destroy(gameObject);
     }
 }
