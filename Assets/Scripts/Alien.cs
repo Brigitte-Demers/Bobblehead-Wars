@@ -10,6 +10,12 @@ using UnityEngine.AI;
 
 public class Alien : MonoBehaviour
 {
+    // Will help launch the head.
+    public Rigidbody head;
+
+    // Tracks the Alien's state.
+    public bool isAlive = true;
+
     // Custom event type that can be configured in the inspector. Will occur on each
     // call to an alien.
     public UnityEvent OnDestroy;
@@ -25,6 +31,8 @@ public class Alien : MonoBehaviour
     // Tracks how much time has passed since the previous update?
     private float navigationTime = 0;
 
+    //private DeathParticles deathParticles;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,27 +43,50 @@ public class Alien : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        navigationTime += Time.deltaTime;
-        if (navigationTime > navigationUpdate)
+        if (isAlive)
         {
-            agent.destination = target.position;
-            navigationTime = 0;
+            navigationTime += Time.deltaTime;
+            if (navigationTime > navigationUpdate)
+            {
+                agent.destination = target.position;
+                navigationTime = 0;
+            }
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Die();
-
-        // Cals the sound effect for the aliens death upon the Alien game objects
-        // destruction.
-        SoundManager.Instance.PlayOneShot(SoundManager.Instance.alienDeath);
+        if (isAlive)
+        {
+            Die();
+            SoundManager.Instance.PlayOneShot(SoundManager.Instance.alienDeath);
+        }
     }
 
     public void Die()
     {
-        OnDestroy.Invoke();
-        OnDestroy.RemoveAllListeners();
-        Destroy(gameObject);
+        isAlive = false;
+        head.GetComponent<Animator>().enabled = false;
+        head.isKinematic = false;
+        head.useGravity = true;
+        head.GetComponent<SphereCollider>().enabled = true;
+        head.gameObject.transform.parent = null;
+        head.velocity = new Vector3(0, 26.0f, 3.0f);
+        head.GetComponent<SelfDestruct>().Initiate();
+
+        //if (deathParticles)
+        //{
+        //    deathParticles.transform.parent = null;
+        //    deathParticles.Activate();
+        //}
     }
+
+    //public DeathParticles GetDeathParticles()
+    //{
+    //    if (deathParticles == null)
+    //    {
+    //        deathParticles = GetComponentInChildren<DeathParticles>();
+    //    }
+    //    return deathParticles;
+    //}
 }

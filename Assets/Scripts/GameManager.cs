@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject deathFloor;
+
     // Represents the Marine's GameObject.
     public GameObject player;
 
@@ -74,6 +76,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (player == null)
+        {
+            return;
+        }
+
         // Adds the amount of time from the past frame.
         currentUpgradeTime += Time.deltaTime;
 
@@ -179,6 +186,7 @@ public class GameManager : MonoBehaviour
                         newAlien.transform.position.y, player.transform.position.z);
                     newAlien.transform.LookAt(targetRotation);
                     alienScript.OnDestroy.AddListener(AlienDestroyed);
+                    //alienScript.GetDeathParticles().SetDeathFloor(deathFloor);
                 }
             }
         }
